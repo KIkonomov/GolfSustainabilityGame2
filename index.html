@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golf Sustainability Game</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #game-container { max-width: 600px; margin: auto; padding: 20px; }
+        button { display: block; margin: 10px auto; padding: 10px; font-size: 16px; }
+        img { width: 600px; height: auto; margin: 10px; display: block; }
+    </style>
+</head>
+<body>
+    <h1>Golf Sustainability Game</h1>
+    <div id="game-container">
+        <img id="scenario-image" src="start.png" alt="Start Image">
+        <p id="message">Loading game...</p>
+        <div id="options"></div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const messageBox = document.getElementById("message");
+            const optionsContainer = document.getElementById("options");
+            const imageElement = document.getElementById("scenario-image");
+            let score = 0;
+            let currentScenario = 0;
+            
+            const scenarios = [
+                { question: "How do you dispose of used golf balls?", image: "golfball.png", options: [
+                    { text: "Throw them in the trash", score: -5 },
+                    { text: "Donate them for recycling", score: 10 },
+                    { text: "Leave them on the course", score: -3 }
+                ]},
+                { question: "How do you travel to the golf course?", image: "travel.png", options: [
+                    { text: "Drive alone", score: -5 },
+                    { text: "Carpool with friends", score: 10 },
+                    { text: "Bike or walk", score: 15 }
+                ]},
+                { question: "How do you manage water usage on the course?", image: "water.png", options: [
+                    { text: "Let the sprinklers run all day", score: -10 },
+                    { text: "Use water-efficient irrigation", score: 10 },
+                    { text: "Only water greens when necessary", score: 15 }
+                ]},
+                { question: "How can golf courses reduce energy consumption?", image: "energy.png", options: [
+                    { text: "Use solar-powered golf carts", score: 15 },
+                    { text: "Keep all lights on all night", score: -10 },
+                    { text: "Use gas-powered mowers", score: -5 }
+                ]},
+                { question: "What is the best way to maintain biodiversity on a golf course?", image: "biodiversity.png", options: [
+                    { text: "Plant native trees and shrubs", score: 15 },
+                    { text: "Remove all natural habitats", score: -10 },
+                    { text: "Use pesticides on all grass", score: -5 }
+                ]}
+            ];
+            
+            function showScenario() {
+                if (currentScenario >= scenarios.length) {
+                    messageBox.innerText = `Game Over! Your sustainability score: ${score}`;
+                    optionsContainer.innerHTML = "<button onclick='restartGame()'>Play Again</button>";
+                    imageElement.src = "game_over.png";
+                    return;
+                }
+                
+                const scenario = scenarios[currentScenario];
+                messageBox.innerText = scenario.question;
+                imageElement.src = scenario.image;
+                optionsContainer.innerHTML = "";
+                
+                scenario.options.forEach(option => {
+                    const button = document.createElement("button");
+                    button.innerText = option.text;
+                    button.onclick = () => {
+                        score += option.score;
+                        currentScenario++;
+                        showScenario();
+                    };
+                    optionsContainer.appendChild(button);
+                });
+            }
+            
+            function restartGame() {
+                score = 0;
+                currentScenario = 0;
+                imageElement.src = "start.png";
+                messageBox.innerText = "Loading game...";
+                optionsContainer.innerHTML = "";
+                showScenario();
+            }
+            
+            // Start the game immediately when page loads
+            showScenario();
+        });
+    </script>
+</body>
+</html>
